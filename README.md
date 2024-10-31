@@ -19,12 +19,15 @@ This script requires Python and the following libraries:
    git clone https://github.com/yourusername/translate_sequences.git
    cd translate_sequences
    ```
-2. Install the required Python libraries:
-   ```bash
-   pip install -r requirements.txt
-   ```
+2. Install the required Python libraries.
 
 ## Usage
+To use the script, run the following command:
+
+```bash
+python3 gff2gbk.py fna/ gff/ gbk/
+```
+
 The script expects three command-line arguments:
 1. The path to the directory containing `.fna` files (FASTA format with DNA sequences).
 2. The path to the directory containing `.gff` files (GFF annotations for the sequences).
