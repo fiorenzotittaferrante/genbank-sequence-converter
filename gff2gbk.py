@@ -207,6 +207,8 @@ def translate_cds(seq_record, features, translation_table):
                 protein_seq = cds_seq.translate(table=translation_table, to_stop=True)
                 feature['qualifiers']['translation'] = str(protein_seq)
 
+                # print(feature['location'], len(cds_seq), len(protein_seq), protein_seq)
+
     return features
 
 
@@ -250,7 +252,7 @@ def create_genbank(seq_record, features, output_file):
 
     seq_record.annotations["molecule_type"] = "DNA"
 
-    with open(output_file, "w") as output_handle:
+    with open(output_file, "a") as output_handle:
         SeqIO.write(seq_record, output_handle, "genbank")
 
 
@@ -285,15 +287,20 @@ def main(fna_directory, gff_directory, out_directory):
         gff_features, translation_table = read_gff(gff_file)
 
         print(f'File:\t{gff_file}\t\tTranslation table: {translation_table}')
+
+        output_file = os.path.basename(gff_file[:-3])+'gbk'
+        with open(os.path.join(out_directory, output_file), "w") as output_handle:
+            SeqIO.write("", output_handle, "genbank")
         
         # For each DNA sequence
         for seq_record in fasta_records:
 
             if seq_record.id in gff_features:
-                output_file = os.path.basename(gff_file[:-3])+'gbk'
+                
                 features = gff_features[seq_record.id]
 
                 translated_features = translate_cds(seq_record, features, translation_table)
+                
                 create_genbank(seq_record, translated_features, os.path.join(out_directory, output_file))
 
             else:
